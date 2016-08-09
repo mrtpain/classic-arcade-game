@@ -1,9 +1,9 @@
 # Front-End Nanodegree Arcade Game
-===============================
+_____________________________________
 
 ## How to Run the Game
 
-The game and its functions primarily live in app.js, this is where the rules of the game are stored.
+The game and its functions primarily live in app.js, this is where the rules of the game are stored. You can run the game and play it by opening up index.html in the browser of you choice.
 
 There are 2 main class necessary to run the game
 

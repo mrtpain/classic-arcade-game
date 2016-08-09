@@ -1,3 +1,4 @@
+'use strict';
 // Enemies our player must avoid
 // Takes X, Y, and Speed parameters used for enemy creation
 var Enemy = function(x, y, speed) {
@@ -60,10 +61,24 @@ var Player = function() {
     /* Sprite is the image of the character
      * X equals initial X coordinate
      * Y equals initial Y coordinate
+     * Lives equals number of available lives
+     * Score starts at 0
      */
-    this.sprite = 'images/char-boy.png'
+    this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
+    this.lives = 3;
+    this.score = 0;
+
+    // Grab the container that the lives live in
+    // adds amount of lives to HTML
+    this.livesBoard = document.getElementById('lives');
+    this.livesBoard.innerHTML = this.lives;
+
+    // Grab the score ID from the HTML
+    // Sets the initial score to update the HTML
+    this.scoreBoard = document.getElementById('score');
+    this.scoreBoard.innerHTML = this.score;
 };
 
 // Render the player on the canvas
@@ -86,13 +101,14 @@ Player.prototype.die = function() {
             // Detects collision and takes away a life
             // updates the number of lives available then checks
             // if lives is equal to 0, if so, resets game.
-            lives = lives - 1;
-            livesBoard.innerHTML = lives;
-            if (lives == 0) {
-                alert('Game Over. ' + 'You had a score of ' + score);
-                score = 0;
-                scoreBoard.innerHTML = score;
-                resetLives();
+            this.lives = this.lives - 1;
+            this.livesBoard.innerHTML = this.lives;
+            if (this.lives === 0) {
+                alert('Game Over. ' + 'You had a score of ' + this.score);
+                this.score = 0;
+                this.scoreBoard.innerHTML = this.score;
+                this.lives = 3;
+                this.livesBoard.innerHTML = this.lives;
             }
             // Reset the players position on death
             this.reset();
@@ -127,8 +143,8 @@ Player.prototype.win = function() {
     // has reached the water and won
     if (this.y === -25) {
         //You Win!
-        score = score + 1;
-        scoreBoard.innerHTML = score;
+        this.score = this.score + 1;
+        this.scoreBoard.innerHTML = this.score;
         this.reset();
     }
 
@@ -159,10 +175,6 @@ Player.prototype.win = function() {
  * Die function runs when player collision with enemy occurs
  */
 Player.prototype.update = function(dt) {
-    this.moveLeft();
-    this.moveRight();
-    this.moveUp();
-    this.moveDown();
     this.die();
     this.win();
 };
@@ -197,6 +209,8 @@ Player.prototype.handleInput = function(keyup) {
 // Creates the enemy array and loops through to create
 // multiple enemies at once
 var allEnemies = [];
+// i variable necessary to run the app in 'use strict';
+var i;
 for (i = 0; i < 6; i++) {
     allEnemies[i] = new Enemy(-200, randomY(), randomSpeed(50, 200));
 }
@@ -216,20 +230,3 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-// Grab the score ID from the html
-// Set the initial score to 0 and update the html
-var scoreBoard = document.getElementById('score');
-var score = 0;
-scoreBoard.innerHTML = score;
-
-// Grab the container that the lives live in
-// Created a function to easily reset the available
-// amount of lives
-var livesBoard = document.getElementById('lives');
-
-function resetLives() {
-    lives = 3;
-    livesBoard.innerHTML = lives;
-};
-resetLives();
